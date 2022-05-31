@@ -17,7 +17,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "docker-build": "docker build -t chat-react-client .",
+    "docker-run": "docker run -d --name chat-react-client -p 8080:8080 -p 9901:9901 chat-react-client",
+    "protoc": "protoc -I=. src/chat.proto --js_out=import_style=commonjs,binary:. --grpc-web_out=import_style=commonjs,mode=grpcwebtext:."
   },
   "eslintConfig": {
     "extends": [
