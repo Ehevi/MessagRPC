@@ -30,6 +30,80 @@ const customers = [
     }
 ];
 
+const workers = [
+    {
+        id: "aaaaaaaaa",
+        name: "John Bolton Worker",
+        age: 23,
+        address: "Address 1"
+    },
+    {
+        id: "bbbbbbbbbbbb",
+        name: "Mary Anne Worker",
+        age: 45,
+        address: "Address 2"
+    }
+];
+
+server.addService(customersProto.WorkerService.service, {
+    getAllWorkers: (_, callback) => {
+        callback(null, { workers });
+    },
+
+    getWorker: (call, callback) => {
+        let worker = workers.find(n => n.id == call.request.id);
+
+        if (worker) {
+            callback(null, worker);
+        } else {
+            callback({
+                code: grpc.status.NOT_FOUND,
+                details: "Not found"
+            });
+        }
+    },
+
+    insertWorker: (call, callback) => {
+        let worker = call.request;
+        
+        worker.id = uuidv4();
+        workers.push(worker);
+        callback(null, worker);
+    },
+
+    updateWorker: (call, callback) => {
+        let existingWorker = workers.find(n => n.id == call.request.id);
+
+        if (existingWorker) {
+            existingWorker.name = call.request.name;
+            existingWorker.age = call.request.age;
+            existingWorker.address = call.request.address;
+            callback(null, existingWorker);
+        } else {
+            callback({
+                code: grpc.status.NOT_FOUND,
+                details: "Not found"
+            });
+        }
+    },
+
+    removeWorker: (call, callback) => {
+        let existingWorkerIndex = workers.findIndex(
+            n => n.id == call.request.id
+        );
+
+        if (existingWorkerIndex != -1) {
+            workers.splice(existingWorkerIndex, 1);
+            callback(null, {});
+        } else {
+            callback({
+                code: grpc.status.NOT_FOUND,
+                details: "Not found"
+            });
+        }
+    }
+});
+
 server.addService(customersProto.CustomerService.service, {
     getAll: (_, callback) => {
         callback(null, { customers });
@@ -57,13 +131,13 @@ server.addService(customersProto.CustomerService.service, {
     },
 
     update: (call, callback) => {
-        let existingCustomer = customers.find(n => n.id == call.request.id);
+        let existingWorker = customers.find(n => n.id == call.request.id);
 
-        if (existingCustomer) {
-            existingCustomer.name = call.request.name;
-            existingCustomer.age = call.request.age;
-            existingCustomer.address = call.request.address;
-            callback(null, existingCustomer);
+        if (existingWorker) {
+            existingWorker.name = call.request.name;
+            existingWorker.age = call.request.age;
+            existingWorker.address = call.request.address;
+            callback(null, existingWorker);
         } else {
             callback({
                 code: grpc.status.NOT_FOUND,
@@ -73,12 +147,12 @@ server.addService(customersProto.CustomerService.service, {
     },
 
     remove: (call, callback) => {
-        let existingCustomerIndex = customers.findIndex(
+        let existingWorkerIndex = customers.findIndex(
             n => n.id == call.request.id
         );
 
-        if (existingCustomerIndex != -1) {
-            customers.splice(existingCustomerIndex, 1);
+        if (existingWorkerIndex != -1) {
+            customers.splice(existingWorkerIndex, 1);
             callback(null, {});
         } else {
             callback({

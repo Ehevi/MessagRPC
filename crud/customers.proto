@@ -24,3 +24,26 @@ message CustomerList {
 message CustomerRequestId {
     string id = 1;
 }
+
+service WorkerService {
+    rpc GetAllWorkers (Empty) returns (WorkerList) {}
+    rpc GetWorker (WorkerRequestId) returns (Worker) {}
+    rpc InsertWorker (Worker) returns (Worker) {}
+    rpc UpdateWorker (Worker) returns (Worker) {}
+    rpc RemoveWorker (WorkerRequestId) returns (Empty) {}
+}
+
+message Worker {
+    string id = 1;
+    string name = 2;
+    int32 age = 3;
+    string address = 4;
+}
+
+message WorkerList {
+    repeated Worker workers = 1;
+}
+
+message WorkerRequestId {
+    string id = 1;
+}

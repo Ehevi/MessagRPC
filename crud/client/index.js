@@ -13,12 +13,25 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => {
-    client.getAll(null, (err, data) => {
+    client.cService.getAll(null, (err, data) => {
         if (!err) {
+            console.log(data);
             res.render("customers", {
                 results: data.customers
             });
         }
+    });
+});
+
+app.get("/workers", (req, res) => {
+    client.wService.getAllWorkers(null, (err, data) => {
+        if (!err) {
+            console.log(data);
+            res.render("workers", {
+                results: data.workers
+            });
+        }
+        else console.log(err);
     });
 });
 
@@ -29,7 +42,7 @@ app.post("/save", (req, res) => {
         address: req.body.address
     };
 
-    client.insert(newCustomer, (err, data) => {
+    client.cService.insert(newCustomer, (err, data) => {
         if (err) throw err;
 
         console.log("Customer created successfully", data);
@@ -45,7 +58,7 @@ app.post("/update", (req, res) => {
         address: req.body.address
     };
 
-    client.update(updateCustomer, (err, data) => {
+    client.cService.update(updateCustomer, (err, data) => {
         if (err) throw err;
 
         console.log("Customer updated successfully", data);
@@ -54,7 +67,7 @@ app.post("/update", (req, res) => {
 });
 
 app.post("/remove", (req, res) => {
-    client.remove({ id: req.body.customer_id }, (err, _) => {
+    client.cService.remove({ id: req.body.customer_id }, (err, _) => {
         if (err) throw err;
 
         console.log("Customer removed successfully");

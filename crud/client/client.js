@@ -11,9 +11,20 @@ var packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 });
 
 const CustomerService = grpc.loadPackageDefinition(packageDefinition).CustomerService;
-const client = new CustomerService(
+const WorkerService = grpc.loadPackageDefinition(packageDefinition).WorkerService;
+const cService = new CustomerService(
     "localhost:30043",
     grpc.credentials.createInsecure()
 );
+
+const wService = new WorkerService(
+    "localhost:30043",
+    grpc.credentials.createInsecure()
+)
+
+const client = {
+    cService: cService,
+    wService: wService
+};
 
 module.exports = client;
