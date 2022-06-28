@@ -1,7 +1,7 @@
 const grpc = require("grpc");
 const protoLoader = require("@grpc/proto-loader");
 
-const PROTO_PATH = "chat.proto";
+const PROTO_PATH = "../chat.proto";
 const SERVER_URI = "0.0.0.0:9090";
 
 const usersInChat = [];
