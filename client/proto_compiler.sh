@@ -1,6 +1,6 @@
 set -e
-PROTO_DIR="."
-FILE_PATH="./chat.proto"
+PROTO_DIR=".."
+FILE_PATH="../chat.proto"
 OUTPUT_DIR="./src"
 
 protoc -I $PROTO_DIR \
