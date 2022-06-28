@@ -4,10 +4,15 @@ cd server
 npm start
 ```
 
-# Start client
 ```
 cd client
 ./run_proxy.sh
+```
+
+# Start client
+```
+cd client
 npm install
+npm start
 
 ```
