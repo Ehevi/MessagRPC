@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import Chat from "./../../components/Chat";
 import UsersList from "./../../components/UsersList";
 import "./ChatPage.css";
@@ -8,37 +10,6 @@ export default function ChatPage({ client }) {
   const [users, setUsers] = useState([]);
   const [msgList, setMsgList] = useState([]);
   const username = window.localStorage.getItem("username");
-
-  useEffect(() => {
-    const strRq = new ReceiveMsgRequest();
-    strRq.setUser(username);
-
-    var chatStream = client.receiveMsg(strRq, {});
-    chatStream.on("data", (response) => {
-      const from = response.getFrom();
-      const msg = response.getMsg();
-      const time = response.getTime();
-
-      console.log("sending friend msg:" + msg, " from:" + from);
-
-      if (from === username) {
-        setMsgList((oldArray) => [
-          ...oldArray,
-          { from, msg, time, mine: true },
-        ]);
-      } else {
-        setMsgList((oldArray) => [...oldArray, { from, msg, time }]);
-      }
-    });
-
-    chatStream.on("status", function (status) {
-      console.log(status.code, status.details, status.metadata);
-    });
-
-    chatStream.on("end", () => {
-      console.log("Stream ended.");
-    });
-  }, [client, username]);
 
   useEffect(() => {
     client.getAllUsers(new Empty(), null, (err, response) => {
@@ -53,9 +24,16 @@ export default function ChatPage({ client }) {
         .filter((u) => u.name !== username);
       setUsers(usersList);
     });
-  }, [client, username]);
+/*
+    client.getMessages(new Empty(), null, (err, response) => {
+      const msges = response?.getMessages() || [];
+      setMsgList(msges);
+    });
+  */  
+  }, []);
 
   function getAllUsers() {
+    console.log("getting all users");
     client.getAllUsers(new Empty(), null, (err, response) => {
       let usersList = response?.getUsersList() || [];
       usersList = usersList
@@ -81,6 +59,22 @@ export default function ChatPage({ client }) {
     });
   }
 
+  function getMessages() {
+    console.log("getting messages");
+    client.getMessages(new Empty(), null, (err, response) => {
+      let msges = response?.getMessagesList() || [];
+      msges = msges
+        .map((msg) => {
+          return {
+            from: msg.array[0],
+            msg: msg.array[1],
+            time: msg.array[2],
+          };
+        });
+      setMsgList(msges);
+    });
+  }
+
   return (
     <div className="chatpage">
       <div className="userslist-section">
@@ -88,7 +82,7 @@ export default function ChatPage({ client }) {
           style={{ paddingBottom: "4px", borderBottom: "1px solid darkgray" }}
         >
           <div>
-            <button onClick={getAllUsers}>REFRESH</button>
+            <button onClick={getMessages}>REFRESH</button>
           </div>
           <div>
             <span>

@@ -5,7 +5,7 @@ const PROTO_PATH = "../chat.proto";
 const SERVER_URI = "0.0.0.0:9090";
 
 const usersInChat = [];
-const observers = [];
+const allMessages = [];
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH);
 const protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
@@ -28,11 +28,8 @@ const join = (call, callback) => {
 };
 
 const sendMsg = (call, callback) => {
-  const chatObj = call.request;
-  observers.forEach((observer) => {
-    observer.call.write(chatObj);
-  });
-  // chats.push(chatObj);
+  const message = call.request;
+  allMessages.push(message);
 
   callback(null, {});
 };
@@ -41,11 +38,9 @@ const getAllUsers = (call, callback) => {
   callback(null, { users: usersInChat });
 };
 
-const receiveMsg = (call, callback) => {
-  observers.push({
-    call,
-  });
-};
+const getMessages = (call, callback) => {
+  callback(null, { messages: allMessages });
+}
 
 const server = new grpc.Server();
 
@@ -53,7 +48,7 @@ server.addService(protoDescriptor.ChatService.service, {
   join,
   sendMsg,
   getAllUsers,
-  receiveMsg,
+  getMessages
 });
 
 server.bind(SERVER_URI, grpc.ServerCredentials.createInsecure());
