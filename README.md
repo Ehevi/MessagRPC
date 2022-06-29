@@ -1,7 +1,5 @@
 [This blog](https://medium.com/@kasturesushrut/how-to-use-grpc-with-react-450283592188) helped me a lot while writing this thing.
 
-https://reactjsexample.com/react-messenger/
-
 # Server
 ```
 cd server
