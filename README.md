@@ -17,7 +17,8 @@ run_proxy.sh
 # Client
 ```
 cd client
-./proto_compiler.sh
+npm run clean
+npm run compile
 ```
 add `/* eslint-disable */` at the top of generated files
 ```

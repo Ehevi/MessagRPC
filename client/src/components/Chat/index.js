@@ -1,6 +1,6 @@
 import "./Chat.css";
 
-export default function Chat({ msgList, sendMessage }) {
+export default function Chat({ msgList, sendMessage, username }) {
   function handler() {
     var msg = window.msgTextArea.value;
     sendMessage(msg);
@@ -10,11 +10,11 @@ export default function Chat({ msgList, sendMessage }) {
   return (
     <div className="chat">
       <div className="chat-header">
-        <h3>Group Messages</h3>
+        <h3>Messages</h3>
       </div>
       <div className="chat-list">
         {msgList?.map((chat, i) => (
-          <ChatCard chat={chat} key={i} />
+          <ChatCard chat={chat} key={i} username={username} />
         ))}
       </div>
       <div className="chat-input">
@@ -36,7 +36,7 @@ export default function Chat({ msgList, sendMessage }) {
   );
 }
 
-function ChatCard({ chat }) {
+function ChatCard({ chat, username }) {
   return (
     <>
       <div style={{ fontSize: "9px", marginLeft: "4px", paddingLeft: "8px" }}>
@@ -44,7 +44,7 @@ function ChatCard({ chat }) {
       </div>
       <div
         className={
-          chat?.mine ? "chatcard chatcard-mine" : "chatcard chatcard-friend"
+          chat?.from === username ? "chatcard chatcard-mine" : "chatcard chatcard-friend"
         }
       >
         <div className="chatcard-msg">

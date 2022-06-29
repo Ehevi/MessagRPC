@@ -13,6 +13,7 @@ export const client = new ChatServiceClient(
 );
 
 export default function App() {
+  const [username, setUsername] = useState('');
   const inputRef = useRef(null);
   const [submitted, setSubmitted] = useState(null);
   function joinHandler() {
@@ -21,6 +22,8 @@ export default function App() {
     const user = new User();
     user.setId(Date.now());
     user.setName(_username);
+
+    setUsername(_username);
 
     client.join(user, null, (err, response) => {
       if (err) return console.log(err);
@@ -33,14 +36,13 @@ export default function App() {
         //window.alert("Username already exists.");
         return;
       }
-      window.localStorage.setItem("username", _username.toString());
       setSubmitted(true);
       // history.push("chatslist");
     });
   }
 
-  function renderChatPage() {
-    return <ChatPage client={client} />;
+  function renderChatPage(username) {
+    return <ChatPage client={client} username={username}/>;
   }
 
   function renderJoinPage() {
@@ -83,7 +85,7 @@ export default function App() {
       <Header />
       <div className="container">
         <main className="main">
-          {submitted ? renderChatPage() : renderJoinPage()}
+          {submitted ? renderChatPage(username) : renderJoinPage()}
         </main>
       </div>
     </>

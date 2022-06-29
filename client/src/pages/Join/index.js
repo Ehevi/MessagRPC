@@ -1,4 +1,4 @@
-import { User, JoinResponse } from "./../../chat_pb";
+import { User } from "./../../chat_pb";
 import { ChatServiceClient } from "./../../chat_grpc_web_pb";
 import { useHistory } from "react-router-dom";
 

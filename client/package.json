@@ -16,9 +16,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "compile": "./proto_compiler.sh",
+    "clean": "rm -Rf ./src/chat_grpc_web_pb.js ./src/chat_pb.js"
   },
   "eslintConfig": {
     "extends": [

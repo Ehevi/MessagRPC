@@ -3,13 +3,12 @@
 import Chat from "./../../components/Chat";
 import UsersList from "./../../components/UsersList";
 import "./ChatPage.css";
-import { ChatMessage, ReceiveMsgRequest, Empty } from "./../../chat_pb";
+import { ChatMessage, Empty } from "./../../chat_pb";
 import { useEffect, useState } from "react";
 
-export default function ChatPage({ client }) {
+export default function ChatPage({ client, username }) {
   const [users, setUsers] = useState([]);
   const [msgList, setMsgList] = useState([]);
-  const username = window.localStorage.getItem("username");
 
   useEffect(() => {
     client.getAllUsers(new Empty(), null, (err, response) => {
@@ -20,20 +19,25 @@ export default function ChatPage({ client }) {
             id: user.array[0],
             name: user.array[1],
           };
-        })
-        .filter((u) => u.name !== username);
+        });
       setUsers(usersList);
     });
-/*
+
     client.getMessages(new Empty(), null, (err, response) => {
-      const msges = response?.getMessages() || [];
+      let msges = response?.getMessagesList() || [];
+      msges = msges
+        .map((msg) => {
+          return {
+            from: msg.array[0],
+            msg: msg.array[1],
+            time: msg.array[2],
+          };
+        });
       setMsgList(msges);
     });
-  */  
   }, []);
 
   function getAllUsers() {
-    console.log("getting all users");
     client.getAllUsers(new Empty(), null, (err, response) => {
       let usersList = response?.getUsersList() || [];
       usersList = usersList
@@ -42,8 +46,7 @@ export default function ChatPage({ client }) {
             id: user.array[0],
             name: user.array[1],
           };
-        })
-        .filter((u) => u.name !== username);
+        });
       setUsers(usersList);
     });
   }
@@ -57,6 +60,7 @@ export default function ChatPage({ client }) {
     client.sendMsg(msg, null, (err, response) => {
       console.log(response);
     });
+    getMessages();
   }
 
   function getMessages() {
@@ -75,6 +79,12 @@ export default function ChatPage({ client }) {
     });
   }
 
+  function refresh() {
+    console.log("refreshing...");
+    getMessages();
+    getAllUsers();
+  }
+
   return (
     <div className="chatpage">
       <div className="userslist-section">
@@ -82,7 +92,7 @@ export default function ChatPage({ client }) {
           style={{ paddingBottom: "4px", borderBottom: "1px solid darkgray" }}
         >
           <div>
-            <button onClick={getMessages}>REFRESH</button>
+            <button onClick={refresh}>REFRESH</button>
           </div>
           <div>
             <span>
@@ -93,7 +103,7 @@ export default function ChatPage({ client }) {
         <UsersList users={users} />
       </div>
       <div className="chatpage-section">
-        <Chat msgList={msgList} sendMessage={sendMessage} />
+        <Chat msgList={msgList} sendMessage={sendMessage} username={username} />
       </div>
     </div>
   );
