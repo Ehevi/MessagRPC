@@ -17,6 +17,7 @@
   "scripts": {
     "start": "react-scripts start",
     "compile": "./proto_compiler.sh",
+    "eslint-disable": "(echo '/* eslint-disable */' && cat ./src/chat_pb.js) > tmp && mv tmp ./src/chat_pb.js",
     "clean": "rm -Rf ./src/chat_grpc_web_pb.js ./src/chat_pb.js"
   },
   "eslintConfig": {

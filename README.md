@@ -19,9 +19,7 @@ run_proxy.sh
 cd client
 npm run clean
 npm run compile
-```
-add `/* eslint-disable */` at the top of generated files
-```
+npm run eslint-disable
 npm install
 npm start
 

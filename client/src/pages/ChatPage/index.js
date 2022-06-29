@@ -11,7 +11,7 @@ export default function ChatPage({ client, username }) {
   const [msgList, setMsgList] = useState([]);
 
   useEffect(() => {
-    client.getAllUsers(new Empty(), null, (err, response) => {
+    client.getUsers(new Empty(), null, (err, response) => {
       let usersList = response?.getUsersList() || [];
       usersList = usersList
         .map((user) => {
@@ -37,8 +37,8 @@ export default function ChatPage({ client, username }) {
     });
   }, []);
 
-  function getAllUsers() {
-    client.getAllUsers(new Empty(), null, (err, response) => {
+  function getUsers() {
+    client.getUsers(new Empty(), null, (err, response) => {
       let usersList = response?.getUsersList() || [];
       usersList = usersList
         .map((user) => {
@@ -57,7 +57,7 @@ export default function ChatPage({ client, username }) {
     msg.setFrom(username);
     msg.setTime(new Date().toLocaleString());
 
-    client.sendMsg(msg, null, (err, response) => {
+    client.sendMessage(msg, null, (err, response) => {
       console.log(response);
     });
     getMessages();
@@ -82,7 +82,7 @@ export default function ChatPage({ client, username }) {
   function refresh() {
     console.log("refreshing...");
     getMessages();
-    getAllUsers();
+    getUsers();
   }
 
   return (
