@@ -10,8 +10,7 @@ npm start
 
 # Proxy
 ```
-cd client
-run_proxy.sh
+./run_proxy.sh
 ```
 
 # Client

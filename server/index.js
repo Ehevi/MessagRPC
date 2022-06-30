@@ -1,5 +1,6 @@
-const grpc = require("grpc");
+const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
+const assert = require('assert');
 
 const PROTO_PATH = "../chat.proto";
 const SERVER_ADDRESS = "0.0.0.0:9090";
@@ -9,8 +10,9 @@ const messages = [];
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH);
 const protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
+// var helloworld = protoDescriptor.helloworld;
 
-const join = (call, callback) => {
+function join(call, callback) {
     const newUser = call.request;
 
     const exists = users.find((user) => user.name == newUser.name);
@@ -28,17 +30,17 @@ const join = (call, callback) => {
     }
 }
 
-const sendMessage = (call, callback) => {
+function sendMessage(call, callback) {
     const message = call.request;
     messages.push(message);
     callback(null, {});
 }
 
-const getUsers = (call, callback) => {
+function getUsers(call, callback) {
     callback(null, { users: users });
 }
 
-const getMessages = (call, callback) => {
+function getMessages(call, callback) {
     callback(null, { messages: messages });
 }
 
@@ -51,7 +53,9 @@ server.addService(protoDescriptor.ChatService.service, {
     getUsers
 })
 
-server.bind(SERVER_ADDRESS, grpc.ServerCredentials.createInsecure());
+server.bindAsync(SERVER_ADDRESS, grpc.ServerCredentials.createInsecure(), (err, port) => {
+    assert.ifError(err);
+    server.start();
+    console.log("Server is running!");
+});
 
-server.start();
-console.log("Server is running!");
