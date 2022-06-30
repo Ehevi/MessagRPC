@@ -60,7 +60,7 @@ export default function ChatPage({ client, username }) {
     client.sendMessage(msg, null, (err, response) => {
       console.log(response);
     });
-    getMessages();
+    refresh();
   }
 
   function getMessages() {

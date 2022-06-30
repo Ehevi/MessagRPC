@@ -1,21 +1,17 @@
-import { User } from "./../../chat_pb";
-import { ChatServiceClient } from "./../../chat_grpc_web_pb";
-import { useHistory } from "react-router-dom";
+import { User } from "../../chat_pb";
+import { useRef } from "react";
 
-export const client = new ChatServiceClient(
-  "http://localhost:8080",
-  null,
-  null
-);
+export default function JoinPage({ client, setUsername, setSubmitted }) {
+  const inputRef = useRef(null);
 
-export default function Join() {
-  const history = useHistory();
   function joinHandler() {
-    const _username = window.username.value;
+    const username = inputRef.current.value;
 
     const user = new User();
     user.setId(Date.now());
-    user.setName(_username);
+    user.setName(username);
+
+    setUsername(username)
 
     client.join(user, null, (err, response) => {
       if (err) return console.log(err);
@@ -24,13 +20,13 @@ export default function Join() {
 
       if (error === 1) {
         console.log(error, msg);
-        window.alert("Username already exists.");
+        setSubmitted(true);
         return;
       }
-      window.localStorage.setItem("username", _username.toString());
-      history.push("chatslist");
+      setSubmitted(true);
     });
   }
+
   return (
     <div>
       <div>
@@ -40,7 +36,7 @@ export default function Join() {
         <input
           style={{ fontSize: "1.3rem" }}
           type="text"
-          id="username"
+          ref={inputRef}
           placeholder="Your username..."
         />
       </div>
