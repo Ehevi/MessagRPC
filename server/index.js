@@ -10,7 +10,6 @@ const messages = [];
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH);
 const protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
-// var helloworld = protoDescriptor.helloworld;
 
 function join(call, callback) {
     const newUser = call.request;
@@ -58,4 +57,3 @@ server.bindAsync(SERVER_ADDRESS, grpc.ServerCredentials.createInsecure(), (err, 
     server.start();
     console.log("Server is running!");
 });
-
